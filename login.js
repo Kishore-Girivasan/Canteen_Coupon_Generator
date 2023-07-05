@@ -94,13 +94,16 @@ function validateNumericInput(input) {
         console.log("DBaccess");
         if (getempid === empid && getpwd === pwd) {
           dataExists = true;
-          if (dept === "Canteen") {
-            localStorage.setItem('admin_data', name);
-            window.location.href = "adminportal.html";
-          } else {
-            localStorage.setItem('user_data', name);
-            window.location.href = "userportal.html";
-          }
+          localStorage.setItem('admin_data', name);
+          localStorage.setItem('data', dept);
+          window.location.href = "couponportal.html";
+          // if (dept === "Canteen") {
+          //   localStorage.setItem('admin_data', name);
+          //   window.location.href = "adminportal.html";
+          // } else {
+          //   localStorage.setItem('user_data', name);
+          //   window.location.href = "userportal.html";
+          // }
         }
       });
   

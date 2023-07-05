@@ -17,7 +17,7 @@ const firebaseConfig = {
   };   
   firebase.initializeApp(firebaseConfig);
   var reportdetails = firebase.database().ref('userdetails');
-  var authoriser = localStorage.getItem('user_data');
+  var authoriser = localStorage.getItem('admin_data');
   document.getElementById('name-label').textContent =authoriser;
   console.log(authoriser);
   function logout() {
@@ -117,8 +117,13 @@ function validateNumericInput(input) {
               },
               data: [
                 {
+                  indexLabelPlacement: "outside",
                   type: "column",
-                  dataPoints: dataPoints
+                  dataPoints: dataPoints.map(dataPoint => ({
+                    label: dataPoint.label,
+                    y: dataPoint.y,
+                    indexLabel: dataPoint.y.toString() 
+                  }))
                 }
               ]
             });

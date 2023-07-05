@@ -72,7 +72,6 @@ function TVaddTableRow(name, phone, otp, count, authority, verify,date, time,dep
 
       // Update the time column
       timeColumn.textContent = time;
-     
 
       // Save the verification status and time in Firebase
       TVsaveVerificationStatus(name, phone, otp, count, verify,date, time);
@@ -104,8 +103,6 @@ function getTime() {
   return hours + ':' + minutes + ':' + seconds;
 }
 
-
-
 function TVgetAndDisplayData() {
   userdetails.once('value')
     .then(function (snapshot) {
@@ -123,16 +120,26 @@ function TVgetAndDisplayData() {
         var verify = childData.verify;
         var time = childData.time;
         var date = childData.date;
-        data.push({
+        console.log("date",date);
+        var SplitParameter=[];
+        SplitParameter=date.split("-");
+        console.log("date.split",SplitParameter[0]+"," + SplitParameter[1]+","+ SplitParameter[2]);
+        var sdate=new Date(SplitParameter[0]+"," + SplitParameter[1]+","+ SplitParameter[2]);
+        console.log(sdate);
+        const splitteddate = new Date(sdate);
+        const day = splitteddate.getDate();
+        const month = splitteddate.getMonth() + 1; // Months are zero-based, so we add 1
+        const year = splitteddate.getFullYear().toString().slice(-2);
+        const convertedFormat = `${day}-${month}-${year}`;
+          data.push({
           authority: authority,
           count: count
         });
         deptdata.push({
-          dept : dept,
-          count: count
+         dept:convertedFormat, 
+         indexLabel:count
         });
-
-        TVaddTableRow(name, phone, otp, count, authority, verify,date, time,dept);
+        TVaddTableRow(name, phone, otp, count, authority, verify,convertedFormat, time,dept);
       }); 
 
       $('#TVtable').DataTable({
@@ -147,6 +154,7 @@ function TVgetAndDisplayData() {
     });
 
 }
+
 
 
     // for (var date in dateWiseData) {
@@ -211,11 +219,17 @@ function plotGraph(data) {
     },
     data: [
       {
-        type: "column",
-        dataPoints: dataPoints
+          indexLabelPlacement: "outside",
+          type: "column",
+          dataPoints: dataPoints.map(dataPoint => ({
+              label: dataPoint.label,
+              y: dataPoint.y,
+              indexLabel: dataPoint.y.toString() // Display the count value as the index label
+          }))
       }
-    ]
-  });
+  ]
+});
+
 
   chart.render();
 }
@@ -228,23 +242,27 @@ function deptplotGraph(deptdata) {
       dataPoints.push({ label: dept, y: groupedData[dept] });
     }
   }
-
   var chart = new CanvasJS.Chart("deptchartContainer", {
     theme: "light2",
     animationEnabled: true,
     title: {
-      text: "Department wise Token Count"
+      text: "Date wise Token Count"
     },
     axisX: {
       interval: 1
     },
-    data: [
-      {
-        type: "column",
-        dataPoints: dataPoints
-      }
+   data: [
+        {
+            indexLabelPlacement: "outside", 
+            type: "line",
+            dataPoints: dataPoints.map(dataPoint => ({
+                label: dataPoint.label,
+                y: dataPoint.y,
+                indexLabel: dataPoint.y.toString()
+            }))
+        }
     ]
-  });
+});
 
   chart.render();
 }

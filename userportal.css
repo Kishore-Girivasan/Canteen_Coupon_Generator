@@ -96,8 +96,8 @@ ul li a {
 .table {
   border-collapse: collapse;
   margin: 20px auto;
-  border-radius: 10px; /* Adjust the radius as needed */
-  overflow: hidden; /* Ensures the border-radius is applied */
+  border-radius: 10px; 
+  overflow: hidden; 
   width: 100%;
 }
 
@@ -111,7 +111,7 @@ ul li a {
 .table th {
   background-color: #009cdb;
   color: #fff;
-  border-radius: 10px 10px 0 0; /* Adjust the radius as needed */
+  border-radius: 10px 10px 0 0; 
 }
 
 .table td {
@@ -132,10 +132,11 @@ ul li a {
 
 .search-box {
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .search-box input[type="text"] {
-  width: 300px; /* Adjust the width as needed */
+  width: 300px;
   margin-left: auto;
   margin-right: auto;
   border-color: #009cdb;
@@ -146,21 +147,14 @@ ul li a {
   border-radius: 5px;
   text-transform: uppercase;
 }
-.chartcontainer {
+#chart {
   display: flex;
-  justify-content: center;
 }
-#chartContainer {
+
+.chart-container {
+  flex: 1;
   height: 300px;
-  width: 500px;
-  margin-top: 100px;
-  margin-right: 50px;
-}
-#chartContainer1 {
-  margin-top: 30px;
-  height: 300px;
-  width: 500px;
-  margin-top: 100px;
+  margin: 10px;
 }
 ::placeholder {
   color: #009cdb;
@@ -215,4 +209,7 @@ input:focus {
 }
 .container-tab{
   margin-top: 20px;
+}
+.tab-content{
+  margin-top: 10px;
 }

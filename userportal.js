@@ -21,10 +21,7 @@ const firebaseConfig = {
   document.getElementById('name-label').textContent =authoriser;
   console.log(authoriser);
   function logout() {
-    // Add code to clear session data or perform any necessary logout actions
-  
-    // Redirect to the login page
-    window.location.href = "index.html"; // Replace "login.html" with the actual login page URL
+    window.location.href = "index.html"; 
   }
   
   function validateStringInput(input) {
@@ -41,12 +38,9 @@ function validateNumericInput(input) {
   }
   
   function RgetAndDisplayData() {
-    var dataPoints = [];
-    var dataPoints1 = [];
-    var authorisedByValues = {};
-    var countByDate = {};
-    var countByUnit = {}; // Track count by unit
-  
+    var countByUnit = {}; 
+    var deptdata = [];
+    var fooddata = [];
     reportdetails.once('value').then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var childData = childSnapshot.val();
@@ -57,76 +51,93 @@ function validateNumericInput(input) {
         var count = childData.count;
         var meal = childData.given;
         var givenfor = childData.food;
+        var dept =childData.unit;
         var authority = childData.authorised_by;
         var date = childData.date;
-        var dateParts = date.split('-');
+        deptdata.push({
+            dept : dept,
+            count: count
+          });
+          fooddata.push({
+            dept : dept,
+            count: count
+          });
+          deptplotGraph(deptdata);
+        //  foodplotGraph(fooddata);
+
+        /*var dateParts = date.split('-');
         var day = parseInt(dateParts[2], 10);
         var month = parseInt(dateParts[1], 10) - 1;
         var dataDate = new Date(dateParts[0], month, day);
-  
+  */
         if (authoriser == authority) {
-          RaddTableRow(unit, name, phone, otp, meal, count, givenfor, date);
+          RaddTableRow(unit, name, phone, otp, count,meal, givenfor, date);
           if (unit in countByUnit) {
             countByUnit[unit] += count; // Increment count for the unit
           } else {
             countByUnit[unit] = count; // Initialize count for the unit
           }
-
+          
         
         //-----------------------------CHART 1-----------------------------------------//
-        var color = ""; // Set color based on data
-        if (count >= 10 && count < 20) {
-          color = "green";
-        } else if (count >= 20 && count < 30) {
-          color = "yellow";
-        } else if (count >= 30 && count <= 100) {
-          color = "red";
         }
-
-        dataPoints.push({ label: unit, y: count, color: color });
-      
-        }
-        if (authority in authorisedByValues) {
-            authorisedByValues[authority]++;
-          } else {
-            authorisedByValues[authority] = 1;
-          }
-
         });
+        function groupDataBydept(deptdata) {
+          var groupeddeptData = {};
+        
+          for (var i = 0; i < deptdata.length; i++) {
+            var item = deptdata[i];
+            var dept = item.dept;
+            
+            if (!groupeddeptData[dept]) {
+              groupeddeptData[dept] = 0;
+            }
+        
+            groupeddeptData[dept]++;
+          }
+        
+          return groupeddeptData;
+        }
+        function deptplotGraph(deptdata) {
+          var groupedData = groupDataBydept(deptdata);
+          var dataPoints = [];
+        
+          for (var dept in groupedData) {
+            if (groupedData.hasOwnProperty(dept)) {
+              dataPoints.push({ label: dept, y: groupedData[dept] });
+            }
+            var chart = new CanvasJS.Chart("deptchartContainer", {
+              theme: "light2",
+              animationEnabled: true,
+              title: {
+                text: "Department wise Token Given"
+              },
+              axisX: {
+                interval: 1
+              },
+              data: [
+                {
+                  type: "column",
+                  dataPoints: dataPoints
+                }
+              ]
+            });
+            chart.render();
+          }}
 
-      var chart = new CanvasJS.Chart("chartContainer", {
-        theme: "light2",
-        animationEnabled: true,
-        title: {
-          text: "Unit's Count"
-        },
-        axisX: {
-          title: "Unit"
-        },
-        axisY: {
-          title: "Count"
-        },
-        data: [{
-          type: "column",
-          dataPoints: Object.keys(countByUnit).map(function (unit) {
-            return { label: unit, y: countByUnit[unit] };
-          })
-        }]
-      });
-  
-      chart.render();
+
+         
+        
+
       //-------------------------CHART 2-----------------------------------//
-              
+    
+
       $('#Rtable').DataTable({
-        searching: false
+        
       });
 //-------------------------------------------------------------------//
     });
   }
-
-
-
-  
   function RfilterTable() {
     var input = document.getElementById('Rinput');
     var filter = input.value.toLowerCase();
@@ -305,10 +316,10 @@ document.getElementById("otp-label").style.display = "block"
 }
 function submitForm(unit, name, phone, count) {
 // Submit the form data or perform any other desired action
-console.log("Unit:", unit);
+/*console.log("Unit:", unit);
 console.log("Name:", name);
 console.log("Phone:", phone);
-console.log("Count:", count);
+console.log("Count:", count);*/
 }
 
 

@@ -56,8 +56,8 @@ ul li a {
 .table {
   border-collapse: collapse;
   margin: 20px auto;
-  border-radius: 10px; /* Adjust the radius as needed */
-  overflow: hidden; /* Ensures the border-radius is applied */
+  border-radius: 10px; 
+  overflow: hidden;
   width: 100%;
 }
 
@@ -71,7 +71,7 @@ ul li a {
 .table th {
   background-color: #009cdb;
   color: #fff;
-  border-radius: 10px 10px 0 0; /* Adjust the radius as needed */
+  border-radius: 10px 10px 0 0; 
 }
 
 .table td {
@@ -87,31 +87,25 @@ ul li a {
 }
 #chart {
   display: flex;
-  margin: auto 0;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
 }
-#chartContainer {
+
+.chart-container {
+  flex: 1;
   height: 300px;
-  width: 500px;
-  margin: 100px;
+  margin: 10px;
 }
-#datechartContainer {
-  height: 300px;
-  width: 500px;
-  margin: 100px;
-}
+
 .table tbody tr:nth-child(even) td {
   background-color: #f2f2f2;
 }
 
 .search-box {
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .search-box input[type="text"] {
-  width: 300px; /* Adjust the width as needed */
+  width: 300px; 
   margin-left: auto;
   margin-right: auto;
   border-color: #009cdb;
@@ -184,8 +178,8 @@ input:focus {
     margin-left: 0;
   }
   .logo {
-    width: 120px; /* Adjust the width as needed */
-    height: 40px; /* Adjust the height as needed */
+    width: 120px; 
+    height: 40px; 
     margin-right: 10px;
   }
 
@@ -218,4 +212,7 @@ input:focus {
   padding: 0px 237px;
   border-radius: 5px; 
   text-align: center;
+}
+.tab-content{
+  margin-top: 10px;
 }

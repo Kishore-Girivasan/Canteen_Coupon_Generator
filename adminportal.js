@@ -26,11 +26,9 @@ const firebaseConfig = {
 function validateNumericInput(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
   }
-  function logout() {
-    // Add code to clear session data or perform any necessary logout actions
-  
+  function logout() {  
     // Redirect to the login page
-    window.location.href = "inde.html"; // Replace "login.html" with the actual login page URL
+    window.location.href = "index.html"; 
   }
   
   //----------------------------TOKEN VERIFICATION STARTS------------------------------------//
@@ -90,7 +88,6 @@ function TVsaveVerificationStatus(name, phone, otp, count, verify, date,time) {
     .then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var childKey = childSnapshot.key;
-
         // Update the "verify" and "time" fields
         userdetails.child(childKey).update({ verify: verify, time: time });
       });
@@ -112,7 +109,9 @@ function getTime() {
 function TVgetAndDisplayData() {
   userdetails.once('value')
     .then(function (snapshot) {
-      var data = [];var datedata = [];
+      var data = [];
+      var deptdata = [];
+      var formattedData = [];
       snapshot.forEach(function (childSnapshot) {
         var childData = childSnapshot.val();
         var name = childData.name;
@@ -124,85 +123,38 @@ function TVgetAndDisplayData() {
         var verify = childData.verify;
         var time = childData.time;
         var date = childData.date;
-
         data.push({
           authority: authority,
           count: count
         });
-        datedata.push({
-          authority: authority,
-          count: count,
-          date: date
+        deptdata.push({
+          dept : dept,
+          count: count
         });
 
-
         TVaddTableRow(name, phone, otp, count, authority, verify,date, time,dept);
-      });
+      }); 
 
-      plotGraph(data);
-      plotDateWiseGraph(datedata);
       $('#TVtable').DataTable({
-        searching: false
+        searching: true
       });
-
+      plotGraph(data);
+     deptplotGraph(deptdata);
     })
+   
     .catch(function (error) {
       console.error(error);
     });
+
 }
-function plotDateWiseGraph(data) {
-  var dateWiseData = {};
 
-  for (var i = 0; i < data.length; i++) {
-    var item = data[i];
-    var date = item.date;
 
-    if (!dateWiseData[date]) {
-      dateWiseData[date] = 0;
-    }
-
-    dateWiseData[date]++;
-  }
-
-  var dataPoints = [];
-
-  for (var date in dateWiseData) {
-    if (dateWiseData.hasOwnProperty(date)) {
-      dataPoints.push({ x: new Date(date), y: dateWiseData[date] });
-    }
-  }
-
-  var chart = new CanvasJS.Chart("datechartContainer", {
-    theme: "light2",
-    animationEnabled: true,
-    title: {
-      text: "Date-wise Count"
-    },
-    axisX: {
-      valueFormatString: "MMM DD, YYYY",
-      crosshair: {
-        enabled: true,
-        snapToDataPoint: true
-      }
-    },
-    axisY: {
-      title: "Count",
-      crosshair: {
-        enabled: true
-      }
-    },
-    data: [
-      {
-        type: "line",
-        xValueFormatString: "MMM DD, YYYY",
-        yValueFormatString: "#0",
-        dataPoints: dataPoints
-      }
-    ]
-  });
-
-  chart.render();
-}
+    // for (var date in dateWiseData) {
+    //   if (dateWiseData.hasOwnProperty(date)) {
+    //     dataPoints.push({ x: date, y: dateWiseData[date] });
+    //   }
+    // }
+  
 
 function groupDataByAuthority(data) {
   var groupedData = {};
@@ -220,14 +172,31 @@ function groupDataByAuthority(data) {
 
   return groupedData;
 }
+function groupDataBydept(deptdata) {
+  var groupeddeptData = {};
 
+  for (var i = 0; i < deptdata.length; i++) {
+    var item = deptdata[i];
+    var dept = item.dept;
+
+    if (!groupeddeptData[dept]) {
+      groupeddeptData[dept] = 0;
+    }
+
+    groupeddeptData[dept]++;
+  }
+
+  return groupeddeptData;
+}
 function plotGraph(data) {
   var groupedData = groupDataByAuthority(data);
   var dataPoints = [];
 
   for (var authority in groupedData) {
     if (groupedData.hasOwnProperty(authority)) {
-      dataPoints.push({ label: authority, y: groupedData[authority] });
+      if(authority!="undefined"){
+        dataPoints.push({ label: authority, y: groupedData[authority] });
+      }
     }
   }
 
@@ -250,6 +219,36 @@ function plotGraph(data) {
 
   chart.render();
 }
+function deptplotGraph(deptdata) {
+  var groupedData = groupDataBydept(deptdata);
+  var dataPoints = [];
+
+  for (var dept in groupedData) {
+    if (groupedData.hasOwnProperty(dept)) {
+      dataPoints.push({ label: dept, y: groupedData[dept] });
+    }
+  }
+
+  var chart = new CanvasJS.Chart("deptchartContainer", {
+    theme: "light2",
+    animationEnabled: true,
+    title: {
+      text: "Department wise Token Count"
+    },
+    axisX: {
+      interval: 1
+    },
+    data: [
+      {
+        type: "column",
+        dataPoints: dataPoints
+      }
+    ]
+  });
+
+  chart.render();
+}
+
 
 // Call the function to retrieve and display data from Firebase
 //TVgetAndDisplayData();
@@ -277,7 +276,7 @@ function plotGraph(data) {
 
   window.onload = TVgetAndDisplayData();
 
-  document.getElementById('TVinput').addEventListener('input', TVfilterTable);
+  //document.getElementById('TVinput').addEventListener('input', TVfilterTable);
 
   
   //----------------------------TOKEN VERIFICATION ENDS------------------------------------//
@@ -364,10 +363,15 @@ function GAgetAndDisplayData() {
 
         GAaddTableRow(empid, ename, dept, verify);
       });
+      $('#GAtable').DataTable({
+        searching: true
+      });
     })
+
     .catch(function(error) {
       console.error(error);
     });
+
 }
 
 // Function to filter and display rows based on search input

@@ -30,7 +30,7 @@ function validateNumericInput(input) {
     // Add code to clear session data or perform any necessary logout actions
   
     // Redirect to the login page
-    window.location.href = "login.html"; // Replace "login.html" with the actual login page URL
+    window.location.href = "inde.html"; // Replace "login.html" with the actual login page URL
   }
   
   //----------------------------TOKEN VERIFICATION STARTS------------------------------------//

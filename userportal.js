@@ -24,7 +24,7 @@ const firebaseConfig = {
     // Add code to clear session data or perform any necessary logout actions
   
     // Redirect to the login page
-    window.location.href = "login.html"; // Replace "login.html" with the actual login page URL
+    window.location.href = "index.html"; // Replace "login.html" with the actual login page URL
   }
   
   function validateStringInput(input) {
